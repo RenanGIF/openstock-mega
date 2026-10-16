@@ -3,6 +3,8 @@ import { getMegaSignal } from '@/lib/signals/mega-signal';
 import { getTradePlan } from '@/lib/signals/tradePlan';
 import { isValidTradingModeId } from '@/lib/signals/tradingModes';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   const symbol = (req.nextUrl.searchParams.get('symbol') || 'NVDA').toUpperCase();
   const mode = (req.nextUrl.searchParams.get('mode') || 'scalp-acao') as string;

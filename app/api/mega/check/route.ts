@@ -4,6 +4,8 @@ import { getTradePlan } from '@/lib/signals/tradePlan';
 import { sendTelegramSignal } from '@/lib/notifications/telegram';
 import { isValidTradingModeId } from '@/lib/signals/tradingModes';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/mega/check?mode=scalp-acao&symbols=NVDA,AAPL
 // Chamado pelo cron Inngest a cada 5min e pode ser chamado manualmente
 export async function GET(req: NextRequest) {

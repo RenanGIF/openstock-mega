@@ -3,16 +3,18 @@ import mongoose from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // FIX: Set Google DNS and force IPv4 to avoid querySrv ECONNREFUSED
+// Skip DNS override during `next build`'s "Collecting page data" — it freezes the build's DNS on Vercel
 import dns from 'dns';
-try {
-    // This is often more effective than setServers for Node 17+
-    if (dns.setDefaultResultOrder) {
-        dns.setDefaultResultOrder('ipv4first');
+if (process.env.NEXT_PHASE !== 'phase-production-build') {
+    try {
+        if (dns.setDefaultResultOrder) {
+            dns.setDefaultResultOrder('ipv4first');
+        }
+        dns.setServers(['8.8.8.8']);
+        console.log('MongoDB: Custom DNS settings applied');
+    } catch (e) {
+        console.error('Failed to set custom DNS:', e);
     }
-    dns.setServers(['8.8.8.8']);
-    console.log('MongoDB: Custom DNS settings applied');
-} catch (e) {
-    console.error('Failed to set custom DNS:', e);
 }
 
 declare global {
