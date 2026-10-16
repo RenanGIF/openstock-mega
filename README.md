@@ -503,9 +503,26 @@ If you discover a vulnerability:
 - Email: <a href="mailto:opendevsociety@cc.cc">opendevsociety@cc.cc</a>
 - We'll coordinate responsible disclosure and patch swiftly
 
+## 🧠 Mega Sentimento + Trade Plan (fork) <a name="mega"></a>
+
+Fork com **MegaScreen** em `/mega` — **apenas analisa e alerta, nunca executa ordem**.
+
+- **Modos:** `SCALP AÇÃO US ● LIVE 15s` (15/15/45/25, TF 5m, ATR 1.5, RR≥1.5), `SCALP CRYPTO ● 24/7` (10/15/45/30, TF 5m, ATR 2.5, RR≥2.0), `SWING (B3/Forex)` (30/25/25/20, TF 1D, ATR 1.5, RR≥2.5, DELAY 15min no free).
+- **MegaScore 0-100:** `Social(Adanos)+News(Finnhub+Gemini)+Técnico(6 padrões valid.+RSI/ATR)+Preço(S/R)` com pesos do modo. `≥70 COMPRA | ≤30 VENDA | senão NEUTRO`.
+- **Filtro bloqueante:** só alerta se `RR ≥ mínimo do modo E Volume > média 20 velas`; senão exibe `BLOQUEADO` com motivo + `“Só aceitamos sinais com RR>1:1.5 e Vol>média. Sem filtro seria ~52%.”`
+- **Padrões:** só 6 (Engolfo Alta/Baixa, Martelo, Estrela Cadente, Estrela da Manhã/Noite) validados com `pavio + <1.5% S/R + volume>SMA20 + RSI 30-70 + confirmação próxima vela`.
+- **Alerta:** Telegram (`TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID`, anti-spam 30/60min) via `GET /api/mega/check?mode=&symbols=` ou Inngest cron `*/5 * * * *`; email opcional (`NOTIFICATION_CHANNEL=telegram|email|both`).
+- **APIs:** Finnhub 15s só `hasFinnhubQuotes()==true` (US sem sufixo + `BINANCE:*`); B3/Forex no free = `DELAY 15min` (Yahoo fallback, `BMFBOVESPA:IBOV`/`PETR4.SA` só Swing).
+- **Backtest:** `lib/signals/backtest.ts` — `Taxa estimada com filtro (backtest 6m) — não é recomendação financeira. Expectativa = winRate*RR - (1-winRate)`.
+
+### Chaves rápidas (grátis)
+Finnhub `finnhub.io/register`, Gemini `aistudio.google.com` (formato novo `AQ.`), Atlas `cloud.mongodb.com` (M0), Telegram `@BotFather` → `getUpdates` p/ `chat_id`. Ver `.env.example`.
+
 ## 📜 License <a name="license"></a>
 
 OpenStock is and will remain free and open for everyone. This project is licensed under the AGPL-3.0 License - see the LICENSE file for details.
+
+> **Aviso AGPL-3.0 — Mega fork:** Este fork permanece AGPL-3.0. Se hospedar como serviço (Vercel/Cloud) e vender acesso, publique o código fonte.
 
 ## 🙏 Acknowledgements <a name="acknowledgements"></a>
 

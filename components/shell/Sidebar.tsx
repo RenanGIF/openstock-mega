@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { BookOpen, Code2, Heart, Info, LayoutDashboard, LifeBuoy, LogOut, Search, Star } from "lucide-react";
+import { BookOpen, Code2, Heart, Info, LayoutDashboard, LifeBuoy, LogOut, Search, Star, TrendingUp } from "lucide-react";
 import { openSearch } from "@/components/SearchCommand";
 import { signOut } from "@/lib/actions/auth.actions";
 import { cn } from "@/lib/utils";
@@ -47,6 +47,9 @@ const Sidebar = ({ user, watchlist }: SidebarProps) => {
             <nav className="flex flex-col gap-0.5">
                 <Link href="/dashboard" className={cn('side-item', pathname === '/dashboard' && 'is-active')}>
                     <LayoutDashboard /> Overview
+                </Link>
+                <Link href="/mega" className={cn('side-item', (pathname === '/mega' || pathname.startsWith('/mega')) && 'is-active')}>
+                    <TrendingUp /> Mega
                 </Link>
                 <Link href="/watchlist" className={cn('side-item', pathname === '/watchlist' && 'is-active')}>
                     <Star /> <span className="flex-1">Watchlist</span>

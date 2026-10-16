@@ -7,7 +7,7 @@
 
 import { isInternationalSymbol } from "@/lib/utils";
 
-export type MarketId = 'us' | 'in' | 'de' | 'ca' | 'au' | 'crypto' | 'fx';
+export type MarketId = 'us' | 'in' | 'de' | 'ca' | 'au' | 'crypto' | 'fx' | 'br';
 
 type Hours = { open: number; close: number }; // minutes of the local day
 
@@ -130,6 +130,21 @@ export const MARKETS: Market[] = [
             { title: 'Commodity FX', symbols: [['FX:AUDUSD', 'AUD / USD'], ['FX:USDCAD', 'USD / CAD'], ['FX:NZDUSD', 'NZD / USD']] },
         ],
         news: 'forex',
+    },
+    {
+        id: 'br', name: 'Brasil', short: 'BR', timeZone: 'America/Sao_Paulo', hours: { open: hm(10), close: hm(17, 30) }, feed: 'Delayed',
+        pulse: [
+            { symbol: 'BMFBOVESPA:IBOV', label: 'Ibovespa' },
+            { symbol: 'BMFBOVESPA:PETR4', label: 'Petrobras' },
+            { symbol: 'BMFBOVESPA:VALE3', label: 'Vale' },
+            { symbol: 'BMFBOVESPA:ITUB4', label: 'Itaú' },
+        ],
+        groups: [
+            { title: 'Índice', symbols: [['BMFBOVESPA:IBOV', 'Ibovespa']] },
+            { title: 'Ações', symbols: [['BMFBOVESPA:PETR4', 'Petrobras PN'], ['BMFBOVESPA:VALE3', 'Vale ON'], ['BMFBOVESPA:ITUB4', 'Itaú PN']] },
+            { title: 'Via Finnhub (.SA)', symbols: [['PETR4.SA', 'Petrobras PN'], ['VALE3.SA', 'Vale ON'], ['ITUB4.SA', 'Itaú PN']] },
+        ],
+        news: 'stock',
     },
 ];
 
