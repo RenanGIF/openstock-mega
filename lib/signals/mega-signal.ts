@@ -186,7 +186,10 @@ async function calcIndicators(candles: Candle[]) {
     if (candles[i].l < candles[i - 1].l && candles[i].l < candles[i - 2].l && candles[i].l < candles[i + 1].l && candles[i].l < candles[i + 2].l) supports.push(candles[i].l);
     if (candles[i].h > candles[i - 1].h && candles[i].h > candles[i - 2].h && candles[i].h > candles[i + 1].h && candles[i].h > candles[i + 2].h) resistances.push(candles[i].h);
   }
-  const lastClose = closes[closes.length - 1];
+  // Usa última vela FECHADA (com volume>0) para close/suporte/volume — ignora candle incompleto/after-hours com v=0
+  let lastIdx = closes.length - 1;
+  while (lastIdx > 0 && (volumes[lastIdx] === 0 || volumes[lastIdx] == null)) lastIdx--;
+  const lastClose = closes[lastIdx];
   if (supports.length) {
     supports.sort((a, b) => Math.abs(a - lastClose) - Math.abs(b - lastClose));
     support = supports[0];
@@ -196,8 +199,22 @@ async function calcIndicators(candles: Candle[]) {
     resistance = resistances[0];
   }
 
-  const lastVol = volumes[volumes.length - 1];
-  const volumeRatio = volSma20 && volSma20 > 0 ? lastVol / volSma20 : null;
+  const lastVol = volumes[lastIdx];
+  // SMA20 só de velas com volume>0 (ignora zeros do after-hours que distorcem média)
+  let volSma20Filtered: number | null = null;
+  {
+    const vols = volumes.filter(v => v != null && v > 0);
+    if (vols.length >= 20) {
+      try {
+        const TI = await import('technicalindicators');
+        const arr = TI.SMA.calculate({ period: 20, values: vols });
+        volSma20Filtered = arr.length ? arr[arr.length - 1] : vols.slice(-20).reduce((a, b) => a + b, 0) / 20;
+      } catch { volSma20Filtered = vols.slice(-20).reduce((a, b) => a + b, 0) / 20; }
+    } else if (vols.length >= 5) {
+      volSma20Filtered = vols.slice(-20).reduce((a, b) => a + b, 0) / Math.min(20, vols.length);
+    }
+  }
+  const volumeRatio = volSma20Filtered && volSma20Filtered > 0 ? lastVol / volSma20Filtered : null;
 
   return { rsi, sma20, sma50, atr, volSma20, volumeRatio, support, resistance, lastClose };
 }
